@@ -1,0 +1,102 @@
+Set FAHREN state
+Set speed value 100 (100km/h or 100 mph, depending on cluster type) in message 1A1h (V_VEH), signal V_VEH_COG from Auswahl panel and check speed pointer indication on display
+Repeat for different speed values
+
+
+Use RIC sim simulation
+Set Fahren state.
+Code GLOBAL_LAYOUT_VARIANTE=00
+Code HMI_M_MODI_ENABLE = 01
+Code HUD_VARIANTE=06 ( HUD High 3+)
+Code PIA_HUD_EIN_AUS=01
+Code HUD_POSITIONCHANGE_ENABLE =00
+Code HUD_DESIGNELEMENTE_ENABLE=01
+Code FES_ENABLE = 01
+Code PIA_FAHRMODUSANSICHT = 1
+HUD_FES_ENABLE =01
+HUD_DESIGNELEMENTE_ENABLE=1
+Code ENTERTAINMENT_VERSION = 00
+Code HUD_ENTERTAINMENT_ENABLE = 01
+Code PIA_PRESELECT_ENTERTAINMENT_ANZEIGEORT = 01
+Code PIA_HUD_SLI_NPI = 01h.
+Code SPEED_LIMIT_ENABLE = 01h.
+Code PIA_SLI_NPI = 01h.
+Code NO_PASSING_ENABLE = 01h.
+Code HUD_NO_PASSING_ENABLE = 01h.
+Code PIA_HUD_BRM = 01
+Code HUD_SPORTANZEIGE_DREHZAHL_ENABLE=1
+Code PIA_HUD_NAVI = 01 (NAVI active in actual key)
+Code HUD_NAVI_ENABLE = 01
+Make sure beruhigte Modus inaktiv (HUD_REDUZIERTEHOEHE_ENABLE=0 and PIA_BERUHIGT =0)
+Set signal OP_SLCTN_DISP_HUD_3 =1 (msg. 321h) ( activating HUD from CID) 
+From msg. 405h set signal ST_MDRV_3_DISP_KI_HUD=8
+Set speed to 100 km/h
+1) Activate a Safety CC (e.g. 811d).
+2) Set signal AVL_MOD_DXP=07
+Activate BRM
+3) Activate SLI: from KAFAS function panel set signals:
+PRES_WDR_LIM_V=1, PRES_CLAS_LIM_V=26, CNCD_TRSG=0, UN_V_LIM=0, RCOG_NPA=1.
+From Msg. 385h (CTR_SU_DRS):
+Set signal Option_SLI_Anzeige (OPTN_SLI_DISP) to 01h.
+Activate a non-safety CC ID (e.g 309d).
+4) Set signal DISP_RPM_ENG_CRSH=6500 rpm
+Set AVL_MOD_DXP = 1 
+Start SDDaemonLib
+Set in RICSim_Control Panel next signals: 
+-> load RICSim Path and Script Path
+-> Guidance State to Active
+-> Guiding Step to Life_Sign (GS_0)
+-> Maneuver Direction to STRAIGHT_ON
+-> Distance to maneuver to 1234
+-> Info active period (sec) to 10
+-> Distance Unit to km
+-> Send Command
+
+Set Pruefen state.
+Code GLOBAL_LAYOUT_VARIANTE=00
+Code HUD_VARIANTE=6 ( HUD High 3+)
+Code AG_MPA_MSP_VIEW = 01
+Code PIA_HUD_EIN_AUS=01
+Code HUD_POSITIONCHANGE_ENABLE =01
+Set AVL_MOD_DXP = 0 
+Set signal OP_SLCTN_DISP_HUD_3 =1 (msg. 321h) ( activating HUD from CID) 
+Watch the HUD and the cluster
+
+
+
+
+##Codare
+Set Pruefen state.
+Code GLOBAL_LAYOUT_VARIANTE=00
+Code HUD_VARIANTE=6 ( HUD High 3+)
+Code AG_MPA_MSP_VIEW = 01
+Code PIA_HUD_EIN_AUS=01
+Code LDM_WBK_VORW_ENABLE = 01h.
+Code LDM_WBK_AKUT_ENABLE = 01h
+LDM_WBK_VORW_HUD_ANZ_ENABLE = 01h.
+Code LDM_WBK_AKUT_HUD_ANZ_ENABLE = 01h
+Set AVL_MOD_DXP = 0 
+Set signal OP_SLCTN_DISP_HUD_3 =1 (msg. 321h) ( activating HUD from CID) 
+1) Activate WBK acute warning: Set env E_105_RQ_SYMAB on 2
+Set env E_105_RQ_DISP_SYM on 3 
+Watch HUD.
+2) Code LDM_WBK_VORW_ENABLE = 00h.
+Activate WBK warning: Set env:
+Set env E_105_RQ_SYMAB on 1
+Set env E_105_RQ_DISP_SYM on 8 
+3) Code LDM_WBK_VORW_ENABLE = 01h.
+Code LDM_WBK_AKUT_HUD_ANZ_ENABLE = 00h
+Activate WBK acute warning: Set env E_105_RQ_SYMAB on 2
+Set env E_105_RQ_DISP_SYM on 3 
+Watch HUD.
+
+Repeat test for GLOBAL_LAYOUT_VARIANTE=00 and signal Set M-Comfort view (DYNAMIC):  set signal ST_MDRV_3_DISP_KI_HUD to 16 (msg 405h).
+
+
+##Exemplu ex output
+
+
+1) WBK acute warning is displayed on HUD and on cluster.
+2) WBK warning is not displayed on HUD and on cluster.
+3) WBK acute warning is not displayed on HUD and is displayed on cluster.
+
